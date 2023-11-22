@@ -2,17 +2,13 @@ from datetime import datetime, timedelta
 
 
 def transform_intervals(intervals: list[dict[str, str]]) -> list(dict[datetime, datetime]):
-    transformed_intervals = [
+    return [
         {
             'start': datetime.strptime(interval['start'], "%H:%M"),
             'stop': datetime.strptime(interval['stop'], "%H:%M")
         }
         for interval in intervals
     ]
-    return sorted(
-        transformed_intervals,
-        key=lambda x: x["start"]
-    )
 
         
 def calculate_free_windows(
@@ -28,7 +24,7 @@ def calculate_free_windows(
     while current_time < end_time - window_duration:
         busy_flag = False
         for interval in busy_intervals:
-            if interval['start'] <= current_time < interval['stop']:
+            if interval['start'] <= current_time < interval['stop'] or interval['start'] < current_time + window_duration <= interval['stop']:
                 busy_flag = True
                 current_time = interval['stop']
                 break
@@ -63,8 +59,25 @@ def main() -> None:
         window_duration
     )
     for window in free_windows:
-        print(f"Свободное окно: {window['start'].strftime('%H:%M')} - {window['stop'].strftime('%H:%M')}")
+        print(f"{window['start'].strftime('%H:%M')} - {window['stop'].strftime('%H:%M')}")
 
 
 if __name__ == "__main__":
     main()
+
+    # 09:00 - 09:30
+    # 09:30 - 10:00
+    # 10:00 - 10:30
+    # 10:50 - 11:20
+    # 11:20 - 11:50
+    # 11:50 - 12:20
+    # 12:20 - 12:50
+    # 12:50 - 13:20
+    # 13:20 - 13:50
+    # 13:50 - 14:20
+    # 15:50 - 16:20
+    # 17:20 - 17:50
+    # 17:50 - 18:20
+    # 18:50 - 19:20
+    # 19:20 - 19:50
+    # 20:20 - 20:50
