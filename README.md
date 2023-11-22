@@ -27,4 +27,7 @@ busy = [
 
 
 ## Запуск:
+Требуется Python 3.10+
+
+
     $ python3 main.py
